@@ -1,6 +1,9 @@
 import random as rand
+import timeit
 
-
+def rand_a():
+    return rand.randint(0, 20)
+start = timeit.default_timer()
 
 def rand_x(sp):
     for i in range(8):
@@ -27,10 +30,10 @@ def opt(sp_y):
 
 
 ind = 0
-a0 = 5
-a1 = 7
-a2 = 3
-a3 = 4
+a0 = rand_a()
+a1 = rand_a()
+a2 = rand_a()
+a3 = rand_a()
 sp_X1 = []
 sp_X2 = []
 sp_X3 = []  #фактори експерименту
@@ -61,6 +64,7 @@ for i in range(8):
 Optim_Y = opt(sp_Y)
 index = sp_Y.index(ind)
 opt_x = [sp_X1[index], sp_X2[index], sp_X3[index]]
+stop = timeit.default_timer()
 print("N   X1   X2   X3     Y        XH1    XH2    XH3")
 for i in range(8):
     print(f"{i+1:^1} |{sp_X1[i]:^4} {sp_X2[i]:^4} {sp_X3[i]:^4} |"
@@ -71,3 +75,4 @@ print(f"dx| {dx1:^4} {dx2:^4} {dx3:^4}|")
 print(f"Function: y = {a0} + {a1}x1 + {a2}x2 + {a3}x3")
 print("Y_ет =", Y_et)
 print("Optimal point :  Y({0}, {1}, {2}) = {3}".format(*opt_x, "%.1f" % Optim_Y))
+print("Program execution time: ", stop-start)
