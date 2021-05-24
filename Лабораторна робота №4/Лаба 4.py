@@ -4,7 +4,13 @@ import sklearn.linear_model as lm
 from scipy.stats import f, t
 from numpy.linalg import solve
 
-
+def np_zer_dod_zavd(n,m,dtype=np.int64):
+    array_ret = []
+    for i in range(n):
+        array_ret.append([])
+        for j in range(m):
+            array_ret[i].append(0)
+    return array_ret
 def regression(x, b):
     y = sum([x[i] * b[i] for i in range(len(x))])
     return y
@@ -27,7 +33,7 @@ def planing_matrix_interaction_effect(n, m):
                     [1, -1, 1, -1],
                     [1, 1, -1, -1],
                     [1, 1, 1, 1]]
-    y = np.zeros(shape=(n, m), dtype=np.int64)
+    y = np_zer_dod_zavd(n,m)
     for i in range(n):
         for j in range(m):
             y[i][j] = random.randint(y_min, y_max)
@@ -202,7 +208,7 @@ def planning_matrix_linear(n, m, x_range):
                              [1, -1, 1, -1],
                              [1, 1, -1, -1],
                              [1, 1, 1, 1]])
-    y = np.zeros(shape=(n,m))
+    y = np_zer_dod_zavd(n,m)
     for i in range(n):
         for j in range(m):
             y[i][j] = random.randint(y_min,y_max)
