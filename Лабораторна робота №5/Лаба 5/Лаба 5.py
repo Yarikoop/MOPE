@@ -3,7 +3,11 @@ import sklearn.linear_model as lm
 from scipy.stats import f, t
 from functools import partial
 from pyDOE2 import *
+import time
 
+time_S = 0
+time_F = 0
+time_C = 0
 
 def regression(x, b):
     y = sum([x[i] * b[i] for i in range(len(x))])
@@ -116,12 +120,15 @@ def find_coef(X, Y, norm=False):
 
 
 def kriteriy_cochrana(y, y_aver, n, m):
+    global time_C
+    time_C = time.time()
     f1 = m - 1
     f2 = n
     q = 0.05
     S_kv = s_kv(y, y_aver, n, m)
     Gp = max(S_kv) / sum(S_kv)
     print('\nПеревірка за критерієм Кохрена')
+    time_C = time.time() - time_C
     return Gp
 
 
@@ -141,20 +148,26 @@ def bs(x, y_aver, n):
 
 
 def kriteriy_studenta(x, y, y_aver, n, m):
+    global time_S
+    time_S = time.time()
     S_kv = s_kv(y, y_aver, n, m)
     s_kv_aver = sum(S_kv) / n
 
     s_Bs = (s_kv_aver / n / m) ** 0.5
     Bs = bs(x, y_aver, n)
     ts = [round(abs(B) / s_Bs, 3) for B in Bs]
+    time_S = time.time() - time_S
 
     return ts
 
 
 def kriteriy_fishera(y, y_aver, y_new, n, m, d):
+    global time_F
+    time_F = time.time()
     S_ad = m / (n - d) * sum([(y_new[i] - y_aver[i]) ** 2 for i in range(len(y))])
     S_kv = s_kv(y, y_aver, n, m)
     S_kv_aver = sum(S_kv) / n
+    time_F = time.time() - time_F
 
     return S_ad / S_kv_aver
 
@@ -185,6 +198,7 @@ def check(X, Y, B, n, m):
         print("Необхідно збільшити кількість дослідів")
         m += 1
         main(n, m)
+    print("Час виконання перевірки: ", time_C)
 
     ts = kriteriy_studenta(X[:, 1:], Y, y_aver, n, m)
     print('\nКритерій Стьюдента:\n', ts)
@@ -206,7 +220,7 @@ def check(X, Y, B, n, m):
         print('')
         return
     f4 = n - d
-
+    print("Час виконання перевірки: ", time_S)
     F_p = kriteriy_fishera(Y, y_aver, y_new, n, m, d)
 
     fisher = partial(f.ppf, q=0.95)
@@ -214,6 +228,8 @@ def check(X, Y, B, n, m):
     print('\nПеревірка адекватності за критерієм Фішера')
     print('Fp =', F_p)
     print('F_t =', f_t)
+    print("Час виконання перевірки: ", time_F)
+
     if F_p < f_t:
         print('Математична модель адекватна експериментальним даним')
     else:
