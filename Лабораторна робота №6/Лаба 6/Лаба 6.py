@@ -1,4 +1,8 @@
 from math import fabs, sqrt
+import time
+from tkinter import messagebox
+
+
 m = 3
 p = 0.95
 N = 15
@@ -178,8 +182,12 @@ while not adekvat:
     known = [my, find_known(1), find_known(2), find_known(3), find_known(4), find_known(5), find_known(6),
              find_known(7),
              find_known(8), find_known(9), find_known(10)]
-
+    first_time = time.time()
     beta = solve(unknown, known)
+    second_time = time.time() - first_time
+    if second_time <= 0.1:
+        messagebox.showinfo("Помилка", "Модель не адекватна")
+        break
     print("Отримане рівняння регресії")
     print("{:.3f} + {:.3f} * X1 + {:.3f} * X2 + {:.3f} * X3 + {:.3f} * Х1X2 + {:.3f} * Х1X3 + {:.3f} * Х2X3"
           "+ {:.3f} * Х1Х2X3 + {:.3f} * X11^2 + {:.3f} * X22^2 + {:.3f} * X33^2 = ŷ\n\tПеревірка"
